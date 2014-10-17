@@ -1,0 +1,25 @@
+{
+	"name": "handlebars-template-loader",
+	"version": "0.1.0",
+	"description": "A Handlebars template loader for Webpack",
+	"main": "index.js",
+	"homepage": "https://github.com/emaphp/handlebars-template-loader",
+	"bugs": {
+		"url": "https://github.com/emaphp/handlebars-template-loader/issues"
+	},
+	"author": {
+		"name": "Emmanuel Antico",
+		"email": "emmanuel.antico@gmail.com"
+	},
+	"dependencies": {
+		"handlebars": "^2.0.0"
+	},
+	"keywords": [
+		"handlebars",
+		"template",
+		"webpack",
+		"loader"
+	],
+	"readme": "A Handlebars template loader for Webpack",
+	"readmeFilename": "README.md"
+}
