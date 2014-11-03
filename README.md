@@ -21,6 +21,10 @@ module.exports = {
         //...
         { test: /\.hbs/, loader: "handlebars-template-loader" }
     ]
+    //...
+    node: {
+        fs: "empty" //avoids error messages
+    }
 };
 ```
 
@@ -84,7 +88,7 @@ Handlebars.registerHelper('link', function(text, url) {
 ```
 
 ```javascript
-//file: app.js
+//file: main.js
 
 //include app helpers
 require("./helpers.js");
