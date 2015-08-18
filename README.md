@@ -3,68 +3,59 @@ handlebars-template-loader
 
 A Handlebars template loader for Webpack
 
-<br/>
-###Usage
+<br>
+###Installation
 
-<br/>
-**Installation**
+<br>
 ```bash
-$ npm install handlebars-template-loader
+npm install handlebars-template-loader
 ```
 
-<br/>
-**Add loader**
+<br>
+###Usage
+
+
+<br>
 ```javascript
 module.exports = {
     //...
-    loaders: [
-        //...
-        { test: /\.hbs/, loader: "handlebars-template-loader" }
-    ]
-    //...
+    
+    module: {
+        loaders: [
+            { test: /\.hbs/, loader: "handlebars-template-loader" }
+        ]
+    },
+    
     node: {
-        fs: "empty" //avoids error messages
+        fs: "empty" // avoids error messages
     }
 };
 ```
 
-<br/>
-**Loading templates**
+<br>
+####Loading templates
 
+<br>
 ```html
-<!-- file: hello.hbs -->
+<!-- File: hello.hbs -->
 <p>Hello&nbsp;{{name}}</p>
 ```
 
+<br>
 ```javascript
-//file: app.js
+// File: app.js
 var compiled = require('./hello.hbs');
 return compiled({name: "world"});
 ```
 
-<br/>
-**Include tag**
+<br>
+####Using helpers
 
-
-```html
-<!-- file: main.hbs -->
-<p>Hello, <!--include message.hbs--></p>
-```
-
-
-```html
-<!-- file: message.hbs -->
-<em>how are you?</em>
-```
-
-
-<br/>
-**Adding helpers**
-
+<br>
 ```javascript
-//file: helpers.js
+// File: helpers.js
 
-//get handlebars instance
+// Get Handlebars instance
 var Handlebars = require('handlebars-template-loader').Handlebars;
 
 Handlebars.registerHelper('list', function(items, options) {
@@ -87,14 +78,239 @@ Handlebars.registerHelper('link', function(text, url) {
 });
 ```
 
+<br>
 ```javascript
-//file: main.js
+// File: main.js
 
-//include app helpers
+// Include template helpers
 require("./helpers.js");
 ```
 
-<br/>
+<br>
+####Prepending filename comment
+
+<br>
+When debugging a large single page app with the DevTools, it's often hard to find the template that contains a bug. With the following config a HTML comment is prepended to the template with the relative path in it (e.g. `<!-- view/user/edit.html -->`).
+
+```javascript
+module.exports = {
+    //...
+    
+    module: {
+        loaders: [
+            {
+                test: /\.hbs$/,
+                loader: "handlebars-template-loader",
+                query: {
+                    prependFilenameComment: __dirname,
+                }
+            }
+        ]
+    }
+};
+```
+
+<br>
+####Images
+
+<br>
+In order to load images you must install either the *file-loader* or the *url-loader* package.
+
+```javascript
+module.exports = {
+    //...
+    
+    module: {
+        loaders: [
+            //...
+            { test: /\.hbs/, loader: "handlebars-template-loader" },
+            { test: /\.jpg/, loader: "file-loader" },
+            { test: /\.png/, loader: "url-loader?mimetype=image/png" },
+        ]
+    }
+};
+```
+
+<br>
+```html
+<!-- Require image using file-loader -->
+<img src="img/portrait.jpg">
+
+<!-- Require image using url-loader -->
+<img src="img/icon.png">
+```
+
+<br>
+Images with an absolute path are not translated unless a *root* argument is defined
+
+```html
+<!-- Using root = undefined => no translation -->
+<img src="/not_translated.jpg">
+
+<!-- Using root = 'images' => require('images/image.jpg') -->
+<img src="/image.jpg">
+```
+
+<br>
+In order to deactivate image processing define the `attributes` option as an empty array.
+
+```javascript
+module.exports = {
+    //...
+    
+    module: {
+        loaders: [
+            {
+                test: /\.hbs$/,
+                loader: "handlebars-template-loader",
+                query: {
+                    attributes: []
+                }
+            }
+        ]
+    }
+};
+```
+
+<br>
+You could also add which attributes need to be processed in the form of pairs *tag:attribute*.
+
+<br>
+```javascript
+module.exports = {
+    //...
+    
+    module: {
+        loaders: [
+            {
+                test: /\.hbs$/,
+                loader: "handlebars-template-loader",
+                query: {
+                    attributes: ['img:src', 'x-img:src']
+                }
+            }
+        ]
+    }
+};
+```
+
+
+<br>
+###Macros
+
+<br>
+Macros allow additional features like including templates or inserting custom text in a compiled templates.
+
+<br>
+####The 'require' macro
+
+<br>
+The `require` macro expects a path to a handlebars template. The macro is then translated to a webpack require expression that evaluates the template using the same arguments.
+
+<br>
+```html
+<h4>Profile</h4>
+
+Name: <strong>{{name}}</strong>
+<br>
+Surname: <strong>{{surname}}</strong>
+<div class="profile-details">
+    @require('profile-details.hbs')
+</div>
+```
+
+<br>
+####The 'include' macro
+
+<br>
+While the `require` macro expects a resource that returns a function, the `include` macro can be used for resources that return plain text. For example, we can include text loaded through the `html-loader` directly in our template.
+
+```html
+<div class="wiki">
+    <h3>Introduction</h3>
+    @include('intro.htm')
+    <h3>Authors</h3>
+    @include('authors.htm')
+</div>
+```
+
+<br>
+####'br' and 'nl'
+
+<br>
+The `br` and `nl` macros insert a `<br>` tag and a new line respectively. They accept a optional argument with the amount of strings to insert.
+
+```html
+<p>Lorem ipsum</p>
+@br(3)
+<p>Sit amet</p>
+@nl()
+```
+
+<br>
+####Custom macros
+
+<br>
+We can include additional macros by defining them in the webpack configuration file. Remember that the value returned by a macro is inserted as plain javascript, so in order to insert a custom text we need to use nested quotes. For example, let's say that we want a macro that includes a copyright string in our template.
+
+<br>
+```javascript
+// File: webpack.config.js
+module.exports = {
+    // ...
+
+    module: {
+        loaders: {
+            // ...
+            { test: /\.hbs/, loader: "handlebars-template-loader" },
+        }
+    },
+    
+    macros: {
+        'copyright': function () {
+            return "'<p>Copyright FakeCorp 2014 - 2015</p>'";
+        }
+    }
+}
+```
+
+<br>
+We then put our macro from within the template as usual.
+
+<br>
+```html
+<footer>
+    @copyright()
+</footer>
+```
+
+<br>
+####Disabling macros
+
+<br>
+You can disable macros if you are a bit unsure about their usage or just simply want faster processing. This is achieved by setting the `parseMacros` options to false.
+
+<br>
+```javascript
+module.exports = {
+    // ...
+    
+    module: {
+        loaders: {
+            // ...
+            {
+                test: /\.hbs/,
+                loader: "handlebars-template-loader",
+                query: {
+                    parseMacros: false
+                }
+            },
+        }
+    }
+}
+```
+
+<br>
 ###License
 
 Released under the MIT license.
