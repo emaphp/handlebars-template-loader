@@ -114,7 +114,7 @@ module.exports = {
 ####Images
 
 <br>
-In order to load images you must install either the *file-loader* or the *url-loader* package.
+In order to load images you must install either the `file-loader` or the `url-loader` package.
 
 ```javascript
 module.exports = {
@@ -141,7 +141,7 @@ module.exports = {
 ```
 
 <br>
-Images with an absolute path are not translated unless a *root* argument is defined
+Images with an absolute path are not translated unless a `root` option is defined
 
 ```html
 <!-- Using root = undefined => no translation -->
@@ -202,7 +202,7 @@ module.exports = {
 Macros allow additional features like including templates or inserting custom text in a compiled templates.
 
 <br>
-####The 'require' macro
+####The *require* macro
 
 <br>
 The `require` macro expects a path to a handlebars template. The macro is then translated to a webpack require expression that evaluates the template using the same arguments.
@@ -220,7 +220,7 @@ Surname: <strong>{{surname}}</strong>
 ```
 
 <br>
-####The 'include' macro
+####The *include* macro
 
 <br>
 While the `require` macro expects a resource that returns a function, the `include` macro can be used for resources that return plain text. For example, we can include text loaded through the `html-loader` directly in our template.
@@ -275,7 +275,7 @@ module.exports = {
 ```
 
 <br>
-We then put our macro from within the template as usual.
+We then invoke our macro from within the template as usual.
 
 <br>
 ```html
