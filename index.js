@@ -19,8 +19,6 @@ var _extend = function(obj, from) {
 // Extendable arguments
 var macros = _extend({}, require('./lib/macros'));
 
-
-
 module.exports = function(content) {
     if (this.cacheable) this.cacheable();
     var callback = this.async();
