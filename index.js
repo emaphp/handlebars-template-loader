@@ -1,14 +1,14 @@
 var Handlebars = require('handlebars');
 var path = require('path');
 
-module.exports = function() {
+module.exports = (function() {
     var loaderUtils = require('loader-utils');
 
     // Parsers
     var attributeParser = require('./lib/attributeParser');
     var macroParser = require('./lib/macroParser');
 
-    // Helpers	
+    // Helpers
     var _extend = function(obj, from) {
         for (var key in from) {
             if (!from.hasOwnProperty(key)) continue;
@@ -18,11 +18,10 @@ module.exports = function() {
     };
 
     // Extendable arguments
-    var attributes = ['img:src'];
     var macros = _extend({}, require('./lib/macros'));
 
     return function(content) {
-        this.cacheable && this.cacheable();
+        if (this.cacheable) this.cacheable();
         var callback = this.async();
 
         // Default arguments
@@ -33,7 +32,7 @@ module.exports = function() {
         // Parse arguments
         var query = loaderUtils.parseQuery(this.query);
 
-        if (typeof(query) == 'object') {
+        if (typeof(query) === 'object') {
             if (query.attributes !== undefined) {
                 attributes = Array.isArray(query.attributes) ? query.attributes : [];
             }
@@ -49,26 +48,27 @@ module.exports = function() {
                 var filename = loaderUtils.getRemainingRequest(this);
                 var filenameRelative = path.relative(query.prependFilenameComment, filename);
 
-                content = "\n<!-- " + filenameRelative + "  -->\n" + content;
+                content = '\n<!-- ' + filenameRelative + '  -->\n' + content;
             }
         }
 
         // Include additional macros
-        if (typeof(this.options.macros) == 'object') {
+        if (typeof(this.options.macros) === 'object') {
             _extend(macros, this.options.macros);
         }
 
+        var macrosContext;
         // Parse macros
         if (parseMacros) {
-            var macrosContext = macroParser(content, function(macro) {
-                return macros[macro] !== undefined && typeof(macros[macro]) == 'function';
+            macrosContext = macroParser(content, function(macro) {
+                return macros[macro] !== undefined && typeof(macros[macro]) === 'function';
             }, 'MACRO');
             content = macrosContext.replaceMatches(content);
         }
 
         // Parse attributes
         var attributesContext = attributeParser(content, function(tag, attr) {
-            return attributes.indexOf(tag + ':' + attr) != -1;
+            return attributes.indexOf(tag + ':' + attr) !== -1;
         }, 'ATTRIBUTE', root);
         content = attributesContext.replaceMatches(content);
 
@@ -83,9 +83,9 @@ module.exports = function() {
         // Resolve attributes
         source = attributesContext.resolveAttributes(source);
 
-        callback(null, "var Handlebars = require('" + require.resolve('handlebars') + "');\n" +
-            "module.exports = (Handlebars[\"default\"] || Handlebars).template(" + source + ");");
+        callback(null, 'var Handlebars = require(\'' + require.resolve('handlebars') + '\');\n' +
+            'module.exports = (Handlebars[\'default\'] || Handlebars).template(' + source + ');');
     };
-}();
+})();
 
 module.exports.Handlebars = Handlebars;
