@@ -1,91 +1,90 @@
 var Handlebars = require('handlebars');
+var loaderUtils = require('loader-utils');
 var path = require('path');
 
-module.exports = function() {
-    var loaderUtils = require('loader-utils');
+// Parsers
+var attributeParser = require('./lib/attributeParser');
+var macroParser = require('./lib/macroParser');
 
-    // Parsers
-    var attributeParser = require('./lib/attributeParser');
-    var macroParser = require('./lib/macroParser');
+// Helpers
+var _extend = function(obj, from) {
+    for (var key in from) {
+        if (!from.hasOwnProperty(key)) continue;
+        obj[key] = from[key];
+    }
+    return obj;
+};
 
-    // Helpers	
-    var _extend = function(obj, from) {
-        for (var key in from) {
-            if (!from.hasOwnProperty(key)) continue;
-            obj[key] = from[key];
-        }
-        return obj;
-    };
+// Extendable arguments
+var macros = _extend({}, require('./lib/macros'));
 
-    // Extendable arguments
-    var attributes = ['img:src'];
-    var macros = _extend({}, require('./lib/macros'));
 
-    return function(content) {
-        this.cacheable && this.cacheable();
-        var callback = this.async();
 
-        // Default arguments
-        var root,
-            parseMacros = true,
-            attributes = ['img:src'];
+module.exports = function(content) {
+    if (this.cacheable) this.cacheable();
+    var callback = this.async();
 
-        // Parse arguments
-        var query = loaderUtils.parseQuery(this.query);
+    // Default arguments
+    var root,
+        parseMacros = true,
+        attributes = ['img:src'];
 
-        if (typeof(query) == 'object') {
-            if (query.attributes !== undefined) {
-                attributes = Array.isArray(query.attributes) ? query.attributes : [];
-            }
+    // Parse arguments
+    var query = loaderUtils.parseQuery(this.query);
 
-            root = query.root;
-
-            if (query.parseMacros !== undefined) {
-                parseMacros = !!query.parseMacros;
-            }
-
-            // Prepend a html comment with the filename in it
-            if (query.prependFilenameComment) {
-                var filename = loaderUtils.getRemainingRequest(this);
-                var filenameRelative = path.relative(query.prependFilenameComment, filename);
-
-                content = "\n<!-- " + filenameRelative + "  -->\n" + content;
-            }
+    if (typeof(query) === 'object') {
+        if (query.attributes !== undefined) {
+            attributes = Array.isArray(query.attributes) ? query.attributes : [];
         }
 
-        // Include additional macros
-        if (typeof(this.options.macros) == 'object') {
-            _extend(macros, this.options.macros);
+        root = query.root;
+
+        if (query.parseMacros !== undefined) {
+            parseMacros = !!query.parseMacros;
         }
 
-        // Parse macros
-        if (parseMacros) {
-            var macrosContext = macroParser(content, function(macro) {
-                return macros[macro] !== undefined && typeof(macros[macro]) == 'function';
-            }, 'MACRO');
-            content = macrosContext.replaceMatches(content);
+        // Prepend a html comment with the filename in it
+        if (query.prependFilenameComment) {
+            var filename = loaderUtils.getRemainingRequest(this);
+            var filenameRelative = path.relative(query.prependFilenameComment, filename);
+
+            content = '\n<!-- ' + filenameRelative + '  -->\n' + content;
         }
+    }
 
-        // Parse attributes
-        var attributesContext = attributeParser(content, function(tag, attr) {
-            return attributes.indexOf(tag + ':' + attr) != -1;
-        }, 'ATTRIBUTE', root);
-        content = attributesContext.replaceMatches(content);
+    // Include additional macros
+    if (typeof(this.options.macros) === 'object') {
+        _extend(macros, this.options.macros);
+    }
 
-        // Compile template
-        var source = Handlebars.precompile(content);
+    var macrosContext;
+    // Parse macros
+    if (parseMacros) {
+        macrosContext = macroParser(content, function(macro) {
+            return macros[macro] !== undefined && typeof(macros[macro]) === 'function';
+        }, 'MACRO');
+        content = macrosContext.replaceMatches(content);
+    }
 
-        // Resolve macros
-        if (parseMacros) {
-            source = macrosContext.resolveMacros(source, macros);
-        }
+    // Parse attributes
+    var attributesContext = attributeParser(content, function(tag, attr) {
+        return attributes.indexOf(tag + ':' + attr) !== -1;
+    }, 'ATTRIBUTE', root);
+    content = attributesContext.replaceMatches(content);
 
-        // Resolve attributes
-        source = attributesContext.resolveAttributes(source);
+    // Compile template
+    var source = Handlebars.precompile(content);
 
-        callback(null, "var Handlebars = require('" + require.resolve('handlebars') + "');\n" +
-            "module.exports = (Handlebars[\"default\"] || Handlebars).template(" + source + ");");
-    };
-}();
+    // Resolve macros
+    if (parseMacros) {
+        source = macrosContext.resolveMacros(source, macros);
+    }
+
+    // Resolve attributes
+    source = attributesContext.resolveAttributes(source);
+
+    callback(null, 'var Handlebars = require(\'' + require.resolve('handlebars') + '\');\n' +
+        'module.exports = (Handlebars[\'default\'] || Handlebars).template(' + source + ');');
+};
 
 module.exports.Handlebars = Handlebars;
