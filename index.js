@@ -1,4 +1,5 @@
 var Handlebars = require('handlebars');
+var HbsRuntime = require('handlebars/runtime');
 var loaderUtils = require('loader-utils');
 var path = require('path');
 
@@ -83,8 +84,8 @@ module.exports = function(content) {
     // Resolve attributes
     source = attributesContext.resolveAttributes(source);
 
-    callback(null, 'var Handlebars = require(\'' + require.resolve('handlebars') + '\');\n' +
+    callback(null, 'var Handlebars = require(\'' + require.resolve('handlebars/runtime') + '\');\n' +
         'module.exports = (Handlebars[\'default\'] || Handlebars).template(' + source + ');');
 };
 
-module.exports.Handlebars = Handlebars;
+module.exports.Handlebars = HbsRuntime;
