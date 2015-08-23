@@ -235,7 +235,7 @@ While the `require` macro expects a resource that returns a function, the `inclu
 ```
 
 <br>
-####'br' and 'nl'
+####*br* and *nl*
 
 <br>
 The `br` and `nl` macros insert a `<br>` tag and a new line respectively. They accept a optional argument with the amount of strings to insert.
@@ -267,7 +267,7 @@ module.exports = {
     },
     
     macros: {
-        'copyright': function () {
+        copyright: function () {
             return "'<p>Copyright FakeCorp 2014 - 2015</p>'";
         }
     }
@@ -308,6 +308,64 @@ module.exports = {
         }
     }
 }
+```
+
+<br>
+####Arguments
+
+<br>
+Macros can accept an arbitrary number of arguments. Only boolean, strings and numeric types are supported.
+
+<br>
+```javascript
+// File: webpack.config.js
+module.exports = {
+    // ...
+
+    module: {
+        loaders: {
+            // ...
+            { test: /\.html$/, loader: "underscore-template-loader" },
+        }
+    },
+    
+    macros: {
+        header: function (size, content) {
+            return "'<h" + size + ">" + content + "</h" + size + ">'";
+        }
+    }
+}
+```
+
+<br>
+```html
+@header(1, 'Welcome')
+<p>Lorem ipsum</p>
+@header(3, 'Contents')
+<p>Sit amet</p>
+```
+
+<br>
+####Escaping
+
+<br>
+Macro expressions can be escaped with the `\` character.
+
+<br>
+```html
+@br(3)
+\@nl()
+@br()
+```
+
+<br>
+Translates to
+
+<br>
+```html
+<br><br><br>
+@nl()
+<br>
 ```
 
 <br>
