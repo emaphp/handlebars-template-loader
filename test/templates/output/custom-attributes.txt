@@ -1,0 +1,3 @@
+module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<link rel=\"stylesheet\" href=\"" + require("./style.css") + "\">\n<img src=\"" + require("./test.png") + "\">\n";
+},"useData":true});

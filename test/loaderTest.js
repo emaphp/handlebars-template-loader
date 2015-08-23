@@ -1,0 +1,93 @@
+var fs = require('fs');
+var path = require('path');
+var chai = require('chai');
+var assert = chai.assert;
+chai.use(require('chai-string'));
+
+var loader = require('../');
+var WebpackLoaderMock = require('./lib/WebpackLoaderMock');
+var loadTemplate = require('./lib/loadTemplate');
+var loadOutput = require('./lib/loadOutput');
+var removeFirstline = require('./lib/removeFirstline');
+
+function testTemplate(loader, template, options, testFn) {
+    loader.call(new WebpackLoaderMock({
+        query: options.query,
+        resource: path.join(__dirname, 'templates', template),
+        options: options.options,
+        async: function (err, source) {
+            testFn(source);
+        }
+    }), loadTemplate(template));
+}
+
+describe('loader', function () {
+    it('should load simple handlebars template', function (done) {
+        testTemplate(loader, 'simple.html', {}, function (output) {
+            // Copy and paste the result of `console.log(output)` to templates/output/simple.txt
+            assert.equal(removeFirstline(output), loadOutput('simple.txt'));
+            done();
+        });
+    });
+
+    it('should prepend html comment', function (done) {
+        testTemplate(loader, 'simple.html', {
+            query: {
+                prependFilenameComment: __dirname
+            }
+        }, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('simple-with-comment.txt'));
+            done();
+        });
+    });
+
+    it('should be possible to require a template', function (done) {
+        testTemplate(loader, 'require.html', {}, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('require.txt'));
+            done();
+        });
+    });
+
+    it('should be possible to include a template', function (done) {
+        testTemplate(loader, 'include.html', {}, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('include.txt'));
+            done();
+        });
+    });
+
+    it('should require an image', function (done) {
+        testTemplate(loader, 'image.html', {}, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('image.txt'));
+            done();
+        });
+    });
+
+    it('should require given custom attributes', function (done) {
+        testTemplate(loader, 'custom-attributes.html', {
+            query: {
+                attributes: ['img:src', 'link:href']
+            }
+        }, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('custom-attributes.txt'));
+            done();
+        });
+    });
+
+    it('should not parse an absolute image without root option given', function (done) {
+        testTemplate(loader, 'absolute-image.html', {}, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('absolute-image.txt'));
+            done();
+        });
+    });
+
+    it('should parse an absolute image if root option is given', function (done) {
+        testTemplate(loader, 'absolute-image.html', {
+            query: {
+                root: '/bar'
+            }
+        }, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('absolute-image-with-root.txt'));
+            done();
+        });
+    });
+});

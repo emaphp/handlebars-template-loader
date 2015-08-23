@@ -1,0 +1,3 @@
+module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "" + "<p>1</p><p>3.534</p><p>5</p>" + "\n" + "<p>TRUE</p><p>FALSE</p><p>TRUE</p>" + "\n" + "<p>lorem</p><p>ipsum</p><p>\"sit\"</p><p>'amet'</p>" + "\n" + "<p>FALSE</p><p>423.429</p><p>hello world</p><p>TRUE</p><p>lorem</p><p>3</p>" + "";
+},"useData":true});
