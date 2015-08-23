@@ -29,7 +29,7 @@ module.exports = function(content) {
         attributes = ['img:src'];
 
     // Parse arguments
-    var query = loaderUtils.parseQuery(this.query);
+    var query = this.query instanceof Object ? this.query : loaderUtils.parseQuery(this.query);
 
     if (typeof(query) === 'object') {
         if (query.attributes !== undefined) {
@@ -44,29 +44,29 @@ module.exports = function(content) {
 
         // Prepend a html comment with the filename in it
         if (query.prependFilenameComment) {
-            var filename = loaderUtils.getRemainingRequest(this);
-            var filenameRelative = path.relative(query.prependFilenameComment, filename);
-
+            var filenameRelative = path.relative(query.prependFilenameComment, this.resource);
             content = '\n<!-- ' + filenameRelative + '  -->\n' + content;
         }
     }
 
     // Include additional macros
-    if (typeof(this.options.macros) === 'object') {
+    if (this.options.macros instanceof Object ) {
         _extend(macros, this.options.macros);
     }
 
-    var macrosContext;
+    // Parser contexts
+    var macrosContext, attributesContext;
+
     // Parse macros
     if (parseMacros) {
-        macrosContext = macroParser(content, function(macro) {
+        macrosContext = macroParser(content, function (macro) {
             return macros[macro] !== undefined && typeof(macros[macro]) === 'function';
         }, 'MACRO');
         content = macrosContext.replaceMatches(content);
     }
 
     // Parse attributes
-    var attributesContext = attributeParser(content, function(tag, attr) {
+    attributesContext = attributeParser(content, function (tag, attr) {
         return attributes.indexOf(tag + ':' + attr) !== -1;
     }, 'ATTRIBUTE', root);
     content = attributesContext.replaceMatches(content);
