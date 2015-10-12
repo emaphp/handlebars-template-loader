@@ -12,6 +12,9 @@ npm install handlebars-template-loader
 ```
 
 <br>
+>Since version 0.5.4, this loaders does not include Handlebars in its dependency list. Make sure to install Handlebars before running webpack. Read https://github.com/npm/npm/issues/6565 for details.
+
+<br>
 ###Usage
 
 

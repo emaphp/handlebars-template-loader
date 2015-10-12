@@ -1,9 +1,10 @@
 {
   "name": "handlebars-template-loader",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "A Handlebars template loader for Webpack",
   "main": "index.js",
   "homepage": "https://github.com/emaphp/handlebars-template-loader",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/emaphp/handlebars-template-loader/issues"
   },
@@ -23,9 +24,6 @@
   "dependencies": {
     "fastparse": "^1.1.1",
     "loader-utils": "^0.2.11"
-  },
-  "peerDependencies": {
-    "handlebars": "^3.0.3"
   },
   "keywords": [
     "handlebars",
