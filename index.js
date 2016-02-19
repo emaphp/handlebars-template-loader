@@ -1,5 +1,5 @@
 var Handlebars = require('handlebars');
-var HbsRuntime = require('handlebars/runtime');
+var HbsRuntime = require('./runtime');
 var loaderUtils = require('loader-utils');
 var path = require('path');
 

@@ -59,7 +59,7 @@ return compiled({name: "world"});
 // File: helpers.js
 
 // Get Handlebars instance
-var Handlebars = require('handlebars-template-loader').Handlebars;
+var Handlebars = require('handlebars-template-loader/runtime');
 
 Handlebars.registerHelper('list', function(items, options) {
   var out = "<ul>";
