@@ -82,7 +82,7 @@ module.exports = function(content) {
     // Resolve attributes
     source = attributesContext.resolveAttributes(source);
 
-    callback(null, 'var Handlebars = require(\'' + require.resolve('handlebars/runtime') + '\');\n' +
+    callback(null, 'var Handlebars = require(\'' + require.resolve('handlebars/runtime').replace(/\\/g, '/') + '\');\n' +
         'module.exports = (Handlebars[\'default\'] || Handlebars).template(' + source + ');');
 };
 
