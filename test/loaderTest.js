@@ -90,4 +90,15 @@ describe('loader', function () {
             done();
         });
     });
+
+    it('should leave dynamic attribute unaltered', function (done) {
+        testTemplate(loader, 'dynamic-attribute.html', {
+            query: {
+                root: '/bar'
+            }
+        }, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('dynamic-attribute.txt'));
+            done();
+        });
+    });
 });
