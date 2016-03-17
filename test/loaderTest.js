@@ -94,10 +94,21 @@ describe('loader', function () {
     it('should leave dynamic attribute unaltered', function (done) {
         testTemplate(loader, 'dynamic-attribute.html', {
             query: {
-                root: '/bar'
             }
         }, function (output) {
             assert.equal(removeFirstline(output), loadOutput('dynamic-attribute.txt'));
+            done();
+        });
+    });
+
+    it('should modify dynamic attributes', function (done) {
+        testTemplate(loader, 'dynamic-attribute-with-parseDynamicRoutes.html', {
+            query: {
+                root: '/bar',
+                parseDynamicRoutes: true
+            }
+        }, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('dynamic-attribute-with-parseDynamicRoutes.txt'));
             done();
         });
     });

@@ -197,6 +197,38 @@ module.exports = {
 };
 ```
 
+Dynamic attributes won't be afected by this behaviour by default.
+
+```html
+<!-- Ignore "root" argument if attribute contains a template expression -->
+<img src="/img/{{doge}}.png" class="doge-img">
+```
+
+In order to append the root directory you'll need to specify the `parseDynamicRoutes` argument.
+
+```javascript
+module.exports = {
+    //...
+
+    module: {
+        loaders: [
+            {
+                test: /\.html$/,
+                loader: "underscore-template-loader",
+                query: {
+                    root: "myapp",
+                    parseDynamicRoutes: true
+                }
+            }
+        ]
+    }
+};
+```
+
+```html
+<!-- Attribute now translates to "myapp/img/{{doge}}.png" -->
+<img src="/img/cat-<%- currentCat.url %>.png" class="doge-img">
+```
 
 <br>
 ###Macros

@@ -26,7 +26,8 @@ module.exports = function(content) {
     // Default arguments
     var root,
         parseMacros = true,
-        attributes = ['img:src'];
+        attributes = ['img:src'],
+        parseDynamicRoutes = false;
 
     // Parse arguments
     var query = this.query instanceof Object ? this.query : loaderUtils.parseQuery(this.query);
@@ -46,6 +47,11 @@ module.exports = function(content) {
         if (query.prependFilenameComment) {
             var filenameRelative = path.relative(query.prependFilenameComment, this.resource);
             content = '\n<!-- ' + filenameRelative + '  -->\n' + content;
+        }
+
+        // Check if dynamic routes must be parsed
+        if (query.parseDynamicRoutes !== undefined) {
+            parseDynamicRoutes = !!query.parseDynamicRoutes;
         }
     }
 
@@ -68,7 +74,7 @@ module.exports = function(content) {
     // Parse attributes
     attributesContext = attributeParser(content, function (tag, attr) {
         return attributes.indexOf(tag + ':' + attr) !== -1;
-    }, 'ATTRIBUTE', root);
+    }, 'ATTRIBUTE', root, parseDynamicRoutes);
     content = attributesContext.replaceMatches(content);
 
     // Compile template

@@ -1,0 +1,11 @@
+module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "<img src=\"images/"
+    + alias3(((helper = (helper = helpers.imgFile || (depth0 != null ? depth0.imgFile : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"imgFile","hash":{},"data":data}) : helper)))
+    + "\" alt=\""
+    + alias3(((helper = (helper = helpers.imgDescription || (depth0 != null ? depth0.imgDescription : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"imgDescription","hash":{},"data":data}) : helper)))
+    + "\">\n<img src=\"/bar/images/"
+    + alias3(((helper = (helper = helpers.imgFile || (depth0 != null ? depth0.imgFile : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"imgFile","hash":{},"data":data}) : helper)))
+    + "\">";
+},"useData":true});
