@@ -101,7 +101,18 @@ describe('loader', function () {
         });
     });
 
-    it('should modify dynamic attributes', function (done) {
+    it('should ignore root option if parseDynamicRoutes is not specified', function (done) {
+        testTemplate(loader, 'dynamic-attribute-with-root.html', {
+            query: {
+                root: '/bar'
+            }
+        }, function (output) {
+            assert.equal(removeFirstline(output), loadOutput('dynamic-attribute-with-root.txt'));
+            done();
+        });
+    });
+
+    it('should modify dynamic routes', function (done) {
         testTemplate(loader, 'dynamic-attribute-with-parseDynamicRoutes.html', {
             query: {
                 root: '/bar',
