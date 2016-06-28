@@ -90,6 +90,22 @@ require("./helpers.js");
 ```
 
 <br>
+####Using partials
+
+<br>
+```javascript
+    // Get Handlebars instance
+    var Handlebars = require('handlebars-template-loader/runtime');
+    
+    // Require partial
+    var partial = require('path/to/my/_partial.hbs');
+    
+    // Register partial
+    Handlebars.registerPartial('my_partial_name', partial);
+    
+```
+
+<br>
 ####Prepending filename comment
 
 <br>
