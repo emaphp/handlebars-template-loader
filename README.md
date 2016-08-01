@@ -3,10 +3,10 @@ handlebars-template-loader
 
 A Handlebars template loader for Webpack
 
+<br>
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table of Contents**
 
-- [handlebars-template-loader](#handlebars-template-loader)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Loading templates](#loading-templates)
@@ -22,6 +22,7 @@ A Handlebars template loader for Webpack
     - [Custom macros](#custom-macros)
     - [Disabling macros](#disabling-macros)
     - [Arguments](#arguments)
+    - [Escaping](#escaping)
 - [License](#license)
 
 <!-- markdown-toc end -->
@@ -464,7 +465,8 @@ module.exports = {
 ```
 
 <br>
-####Escaping
+Escaping
+--------
 
 <br>
 Macro expressions can be escaped with the `\` character.
