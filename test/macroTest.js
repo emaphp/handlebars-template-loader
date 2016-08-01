@@ -15,117 +15,114 @@ function testTemplate(loader, template, options, testFn) {
         query: options.query,
         resource: path.join(__dirname, 'templates', template),
         options: options.options,
-        async: function (err, source) {
+        async: function(err, source) {
             testFn(source);
         }
     }), loadTemplate(template));
 }
 
-describe('macro', function () {
-    it('should be parsed', function (done) {
+describe('macro', function() {
+    it('should be parsed', function(done) {
         testTemplate(loader, 'custom-macro.html', {
             options: {
                 macros: {
-                    foo: function () {
+                    foo: function() {
                         return '"<p>bar</p>"';
                     }
                 }
             }
-        }, function (output) {
-            assert.equal(removeFirstline(output), loadOutput('custom-macro.txt'));
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('custom-macro.txt').trimRight());
             done();
         });
     });
 
-    it('should receive boolean arguments', function (done) {
+    it('should receive boolean arguments', function(done) {
         testTemplate(loader, 'macro_boolean_args.html', {
             options: {
                 macros: {
-                    bool_test: function (arg) {
+                    bool_test: function(arg) {
                         assert.typeOf(arg, 'boolean');
                         return arg ? '"<p>TRUE</p>"' : '"<p>FALSE</p>"';
                     }
                 }
             }
-        }, function (output) {
-            assert.equal(removeFirstline(output), loadOutput('macro_boolean_args.txt'));
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('macro_boolean_args.txt').trimRight());
             done();
         });
     });
 
-    it('should receive numeric arguments', function (done) {
+    it('should receive numeric arguments', function(done) {
         testTemplate(loader, 'macro_numeric_args.html', {
             options: {
                 macros: {
-                    num_test: function (arg) {
+                    num_test: function(arg) {
                         assert.typeOf(arg, 'number');
                         return '"<p>' + arg + '</p>"';
                     }
                 }
             }
-        }, function (output) {
-            assert.equal(removeFirstline(output), loadOutput('macro_numeric_args.txt'));
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('macro_numeric_args.txt').trimRight());
             done();
         });
     });
 
-    it('should receive string arguments', function (done) {
+    it('should receive string arguments', function(done) {
         testTemplate(loader, 'macro_string_args.html', {
             options: {
                 macros: {
-                    str_test: function (arg) {
+                    str_test: function(arg) {
                         assert.typeOf(arg, 'string');
                         return '"<p>' + arg.toUpperCase() + '</p>"';
                     }
                 }
             }
-        }, function (output) {
-            assert.equal(removeFirstline(output), loadOutput('macro_string_args.txt'));
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('macro_string_args.txt').trimRight());
             done();
         });
     });
 
-    it('should receive argument list', function (done) {
+    it('should receive argument list', function(done) {
         testTemplate(loader, 'macro_argument_list.html', {
             options: {
                 macros: {
-                    numbers: function (first, second, third) {
+                    numbers: function(first, second, third) {
                         assert.typeOf(first, 'number');
                         assert.typeOf(second, 'number');
                         assert.typeOf(third, 'number');
-                        
                         var output = '';
-                        for (var i = 0; i < arguments.length; i++) {
+                        for (var i = 0; i < 3; i++) {
                             output += '<p>' + arguments[i] + '</p>';
                         }
                         return '"' + output + '"';
                     },
 
-                    booleans: function (first, second, third) {
+                    booleans: function(first, second, third) {
                         assert.typeOf(first, 'boolean');
                         assert.typeOf(second, 'boolean');
                         assert.typeOf(third, 'boolean');
-                        
                         var output = '';
-                        for (var i = 0; i < arguments.length; i++) {
+                        for (var i = 0; i < 3; i++) {
                             output += '<p>' + (arguments[i] ? 'TRUE' : 'FALSE') + '</p>';
                         }
                         return '"' + output + '"';
                     },
 
-                    strings: function (first, second, third) {
+                    strings: function(first, second, third) {
                         assert.typeOf(first, 'string');
                         assert.typeOf(second, 'string');
                         assert.typeOf(third, 'string');
-                        
                         var output = '';
-                        for (var i = 0; i < arguments.length; i++) {
+                      for (var i = 0; i < 4; i++) {
                             output += '<p>' + arguments[i].toLowerCase().replace(/"/g, "\\\"") + '</p>';
                         }
                         return '"' + output + '"';
                     },
 
-                    mixed: function () {
+                    mixed: function() {
                         assert.equal(arguments.length, 6);
                         assert.typeOf(arguments[0], 'boolean');
                         assert.typeOf(arguments[1], 'number');
@@ -136,7 +133,7 @@ describe('macro', function () {
 
                         var output = '';
 
-                        for (var i = 0; i < arguments.length; i++) {
+                        for (var i = 0; i < 6; i++) {
                             var type = typeof(arguments[i]);
 
                             if (type == 'string') {
@@ -149,38 +146,46 @@ describe('macro', function () {
                         }
 
                         return '"' + output + '"';
-
                     }
                 }
             }
-        }, function (output) {
-            assert.equal(removeFirstline(output), loadOutput('macro_argument_list.txt'));
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('macro_argument_list.txt').trimRight());
             done();
         });
     });
 
-    it('should not be evaluated', function (done) {
+    it('should not be evaluated', function(done) {
         testTemplate(loader, 'macro.html', {
             query: {
                 parseMacros: false
             }
-        }, function (output) {
-            assert.equal(removeFirstline(output), loadOutput('disabled-macro.txt'));
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('disabled-macro.txt').trimRight());
             done();
         });
     });
 
-    it('should be replaced when escaped', function (done) {
+    it('should be replaced when escaped', function(done) {
         testTemplate(loader, 'macro_escaped.html', {
             options: {
                 macros: {
-                    unescaped: function () {
+                    unescaped: function() {
                         return '"<p>Ok</p>"';
                     }
                 }
             }
-        }, function (output) {
-            assert.equal(removeFirstline(output), loadOutput('macro_escaped.txt'));
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('macro_escaped.txt').trimRight());
+            done();
+        });
+    });
+
+    it('should replace repeat string macros', function(done) {
+        testTemplate(loader, 'macro_repeat.html', {
+            options: {}
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('macro_repeat.txt').trimRight());
             done();
         });
     });
