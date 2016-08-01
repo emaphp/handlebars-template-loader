@@ -122,4 +122,16 @@ describe('loader', function() {
             done();
         });
     });
+
+    it('should support compilation options', function(done) {
+        // srcName makes the loader return a {code, map} object literal
+        testTemplate(loader, 'compilation-options.html', {
+            query: {
+                srcName: 'foo.js'
+            }
+        }, function(output) {
+            assert.equal(removeFirstline(output), loadOutput('compilation-options.txt').trimRight());
+            done();
+        });
+    });
 });
