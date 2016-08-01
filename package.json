@@ -1,6 +1,6 @@
 {
   "name": "handlebars-template-loader",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A Handlebars template loader for Webpack",
   "main": "index.js",
   "homepage": "https://github.com/emaphp/handlebars-template-loader",
@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "fastparse": "^1.1.1",
-    "loader-utils": "^0.2.11"
+    "loader-utils": "^0.2.15"
   },
   "keywords": [
     "handlebars",
@@ -42,10 +42,10 @@
   ],
   "readmeFilename": "README.md",
   "devDependencies": {
-    "chai": "^3.2.0",
-    "chai-string": "^1.1.2",
-    "istanbul": "^0.3.18",
-    "mocha": "^2.2.5"
+    "chai": "^3.5.0",
+    "chai-string": "^1.2.0",
+    "istanbul": "^0.4.4",
+    "mocha": "^2.5.3"
   },
   "scripts": {
     "test": "mocha",
