@@ -9,7 +9,7 @@ module.exports = function (source) {
   var allLoadersButThisOne = this.loaders.filter(function(loader) {
     return loader.module !== module.exports;
   });
-  
+
   // This loader shouldn't kick in if there is any other loader
   if (allLoadersButThisOne.length > 0) {
     return source;
