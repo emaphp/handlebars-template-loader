@@ -5,11 +5,13 @@ A Handlebars template loader for Webpack
 
 <br/>
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
+
 **Table of Contents**
 
 - [Installation](#installation)
 - [Usage](#usage)
 - [Loading templates](#loading-templates)
+- [Using helpers](#using-helpers)
 - [Using partials](#using-partials)
 - [Options](#options)
     - [Prepending filename comment](#prepending-filename-comment)
@@ -17,6 +19,7 @@ A Handlebars template loader for Webpack
     - [Compilation options](#compilation-options)
 - [Macros](#macros)
     - [require](#require)
+    - [include](#include)
     - [repeat](#repeat)
     - [Custom macros](#custom-macros)
     - [Disabling macros](#disabling-macros)
@@ -27,20 +30,25 @@ A Handlebars template loader for Webpack
 <!-- markdown-toc end -->
 
 <br/>
-# Installation
+
+# Installation #
 
 <br/>
-```
+
+```bash
 npm install handlebars-template-loader
 ```
 
 <br/>
-Since version 0.5.4, this loaders does not include Handlebars in its dependency list. Make sure to install Handlebars before running webpack. Read https://github.com/npm/npm/issues/6565 for details.
+
+>Since version 0.5.4, this loaders does not include Handlebars in its dependency list. Make sure to install Handlebars before running webpack. Read https://github.com/npm/npm/issues/6565 for details.
 
 <br/>
-# Usage
+
+# Usage #
 
 <br/>
+
 ```javascript
 module.exports = {
     //...
@@ -58,15 +66,18 @@ module.exports = {
 ```
 
 <br/>
-# Loading templates
+
+# Loading templates #
 
 <br/>
+
 ```html
 <!-- File: hello.hbs -->
 <p>Hello&nbsp;{{name}}</p>
 ```
 
 <br/>
+
 ```javascript
 // File: app.js
 var compiled = require('./hello.hbs');
@@ -74,9 +85,11 @@ return compiled({name: "world"});
 ```
 
 <br/>
-####Using helpers
+
+# Using helpers #
 
 <br/>
+
 ```javascript
 // File: helpers.js
 
@@ -104,6 +117,7 @@ Handlebars.registerHelper('link', function(text, url) {
 ```
 
 <br/>
+
 ```javascript
 // File: main.js
 
@@ -112,9 +126,11 @@ require("./helpers.js");
 ```
 
 <br/>
-# Using partials
+
+# Using partials #
 
 <br/>
+
 ```javascript
     // Get Handlebars instance
     var Handlebars = require('handlebars-template-loader/runtime');
@@ -128,13 +144,18 @@ require("./helpers.js");
 ```
 
 <br/>
-# Options
+
+# Options #
 
 <br/>
-## Prepending filename comment
+
+## Prepending filename comment ##
 
 <br/>
+
 When debugging a large single page app with the DevTools, it's often hard to find the template that contains a bug. With the following config a HTML comment is prepended to the template with the relative path in it (e.g. `<!-- view/user/edit.html -->`).
+
+<br/>
 
 ```javascript
 module.exports = {
@@ -155,9 +176,11 @@ module.exports = {
 ```
 
 <br/>
-## Images
+
+## Images ##
 
 <br/>
+
 In order to load images you must install either the `file-loader` or the `url-loader` package.
 
 ```javascript
@@ -176,6 +199,7 @@ module.exports = {
 ```
 
 <br/>
+
 ```html
 <!-- Require image using file-loader -->
 <img src="img/portrait.jpg">
@@ -185,6 +209,7 @@ module.exports = {
 ```
 
 <br/>
+
 Images with an absolute path are not translated unless a `root` option is defined
 
 ```html
@@ -196,6 +221,7 @@ Images with an absolute path are not translated unless a `root` option is define
 ```
 
 <br/>
+
 In order to deactivate image processing define the `attributes` option as an empty array.
 
 ```javascript
@@ -217,9 +243,11 @@ module.exports = {
 ```
 
 <br/>
+
 You could also add which attributes need to be processed in the form of pairs *tag:attribute*.
 
 <br/>
+
 ```javascript
 module.exports = {
     //...
@@ -272,12 +300,15 @@ module.exports = {
 ```
 
 <br/>
-## Compilation options
+
+## Compilation options ##
 
 <br/>
+
 Handlebars does support [additional compilation options](http://handlebarsjs.com/reference.html) that you can specify in your `query` object literal.
 
 <br/>
+
 ```javascript
 module.exports = {
     //...
@@ -299,19 +330,22 @@ module.exports = {
 ```
 
 <br/>
-# Macros
+
+# Macros #
 
 <br/>
 Macros allow additional features like including templates or inserting custom text in a compiled templates.
 
 <br/>
-require
--------
+
+## require ##
 
 <br/>
+
 The `require` macro expects a path to a handlebars template. The macro is then translated to a webpack require expression that evaluates the template using the same arguments.
 
 <br/>
+
 ```html
 <h4>Profile</h4>
 
@@ -324,9 +358,11 @@ Surname: <strong>{{surname}}</strong>
 ```
 
 <br/>
-## require
+
+## include ##
 
 <br/>
+
 While the `require` macro expects a resource that returns a function, the `include` macro can be used for resources that return plain text. For example, we can include text loaded through the `html-loader` directly in our template.
 
 ```html
@@ -339,9 +375,11 @@ While the `require` macro expects a resource that returns a function, the `inclu
 ```
 
 <br/>
-## repeat
+
+## repeat ##
 
 <br/>
+
 The `repeat` macro will repeat the given string the amount of times as specified by the second argument (default to 1). It will only accept string literals.
 
 ```html
@@ -352,12 +390,15 @@ The `repeat` macro will repeat the given string the amount of times as specified
 ```
 
 <br/>
-## Custom macros
+
+## Custom macros ##
 
 <br/>
+
 We can include additional macros by defining them in the webpack configuration file. Remember that the value returned by a macro is inserted as plain javascript, so in order to insert a custom text we need to use nested quotes. For example, let's say that we want a macro that includes a copyright string in our template.
 
 <br/>
+
 ```javascript
 // File: webpack.config.js
 module.exports = {
@@ -379,9 +420,11 @@ module.exports = {
 ```
 
 <br/>
+
 We then invoke our macro from within the template as usual.
 
 <br/>
+
 ```html
 <footer>
     @copyright()
@@ -389,12 +432,15 @@ We then invoke our macro from within the template as usual.
 ```
 
 <br/>
-## Disabling macros
+
+## Disabling macros ##
 
 <br/>
+
 You can disable macros if you are a bit unsure about their usage or just simply want faster processing. This is achieved by setting the `parseMacros` options to false.
 
 <br/>
+
 ```javascript
 module.exports = {
     // ...
@@ -415,12 +461,15 @@ module.exports = {
 ```
 
 <br/>
-## Arguments
+
+## Arguments ##
 
 <br/>
+
 Macros can accept an arbitrary number of arguments. Only boolean, strings and numeric types are supported.
 
 <br/>
+
 ```javascript
 // File: webpack.config.js
 module.exports = {
@@ -442,6 +491,7 @@ module.exports = {
 ```
 
 <br/>
+
 ```html
 @header(1, 'Welcome')
 <p>Lorem ipsum</p>
@@ -450,22 +500,21 @@ module.exports = {
 ```
 
 <br/>
-## Escaping
+
+## Escaping ##
 
 <br/>
+
 Macro expressions can be escaped with the `\` character.
 
-<br/>
 ```html
 @repeat('<br/>', 3)
 \@escaped()
 @custom_macro()
 ```
 
-<br/>
 Translates to
 
-<br/>
 ```html
 <br/><br/><br/>
 @escaped()
@@ -473,6 +522,7 @@ custom string
 ```
 
 <br/>
-# License
+
+# License #
 
 Released under the MIT license.
