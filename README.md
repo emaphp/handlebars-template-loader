@@ -16,6 +16,7 @@ A Handlebars template loader for Webpack
 - [Options](#options)
     - [Prepending filename comment](#prepending-filename-comment)
     - [Images](#images)
+    - [Runtime path](#runtime-path)
     - [Compilation options](#compilation-options)
 - [Macros](#macros)
     - [require](#require)
@@ -52,13 +53,13 @@ npm install handlebars-template-loader
 ```javascript
 module.exports = {
     //...
-    
+
     module: {
         loaders: [
             { test: /\.hbs/, loader: "handlebars-template-loader" }
         ]
     },
-    
+
     node: {
         fs: "empty" // avoids error messages
     }
@@ -134,13 +135,13 @@ require("./helpers.js");
 ```javascript
     // Get Handlebars instance
     var Handlebars = require('handlebars-template-loader/runtime');
-    
+
     // Require partial
     var partial = require('path/to/my/_partial.hbs');
-    
+
     // Register partial
     Handlebars.registerPartial('my_partial_name', partial);
-    
+
 ```
 
 <br/>
@@ -160,7 +161,7 @@ When debugging a large single page app with the DevTools, it's often hard to fin
 ```javascript
 module.exports = {
     //...
-    
+
     module: {
         loaders: [
             {
@@ -186,7 +187,7 @@ In order to load images you must install either the `file-loader` or the `url-lo
 ```javascript
 module.exports = {
     //...
-    
+
     module: {
         loaders: [
             //...
@@ -227,7 +228,7 @@ In order to deactivate image processing define the `attributes` option as an emp
 ```javascript
 module.exports = {
     //...
-    
+
     module: {
         loaders: [
             {
@@ -251,7 +252,7 @@ You could also add which attributes need to be processed in the form of pairs *t
 ```javascript
 module.exports = {
     //...
-    
+
     module: {
         loaders: [
             {
@@ -300,6 +301,32 @@ module.exports = {
 ```
 
 <br/>
+
+## Runtime path ##
+
+If you have a custom location for your Handlebars runtime module then you can set that in your `query` object via the `runtimePath` property. This is the path to the Handlebars runtime that every `.hbs` file will require and use. By default this loader looks up the absolute path to the `handlebars/runtime` in your `node_modules` folder. Changing this property is useful if you are doing somethign non-standard with your Handlebar templates, for example setting an alias for the `handlebars/runtime` path.
+
+<br/>
+
+```javascript
+module.exports = {
+    //...
+
+    module: {
+        loaders: [
+            {
+                test: /\.html$/,
+                loader: "handlebars-template-loader",
+                query: {
+                    runtimePath: 'handlebars/runtime'
+                }
+            }
+        ]
+    }
+};
+```
+
+<br />
 
 ## Compilation options ##
 
@@ -410,7 +437,7 @@ module.exports = {
             { test: /\.hbs/, loader: "handlebars-template-loader" },
         }
     },
-    
+
     macros: {
         copyright: function () {
             return "'<p>Copyright FakeCorp 2014 - 2015</p>'";
@@ -444,7 +471,7 @@ You can disable macros if you are a bit unsure about their usage or just simply 
 ```javascript
 module.exports = {
     // ...
-    
+
     module: {
         loaders: {
             // ...
@@ -481,7 +508,7 @@ module.exports = {
             { test: /\.html$/, loader: "handlebars-template-loader" },
         }
     },
-    
+
     macros: {
         header: function (size, content) {
             return "'<h" + size + ">" + content + "</h" + size + ">'";

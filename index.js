@@ -27,7 +27,8 @@ module.exports = function(content) {
     var root,
         parseMacros = true,
         attributes = ['img:src'],
-        parseDynamicRoutes = false;
+        parseDynamicRoutes = false,
+        runtimePath = require.resolve('handlebars/runtime').replace(/\\/g, '/');
 
     // Parse arguments
     var query = this.query instanceof Object ? this.query : loaderUtils.parseQuery(this.query);
@@ -52,6 +53,10 @@ module.exports = function(content) {
         // Check if dynamic routes must be parsed
         if (query.parseDynamicRoutes !== undefined) {
             parseDynamicRoutes = !!query.parseDynamicRoutes;
+        }
+
+        if (query.runtimePath) {
+            runtimePath = query.runtimePath;
         }
     }
 
@@ -88,7 +93,7 @@ module.exports = function(content) {
     // Resolve attributes
     source = attributesContext.resolveAttributes(source);
 
-    callback(null, 'var Handlebars = require(\'' + require.resolve('handlebars/runtime').replace(/\\/g, '/') + '\');\n' +
+    callback(null, 'var Handlebars = require(\'' + runtimePath + '\');\n' +
         'module.exports = (Handlebars[\'default\'] || Handlebars).template(' + source + ');');
 };
 
