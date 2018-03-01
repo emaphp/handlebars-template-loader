@@ -3,6 +3,11 @@ handlebars-template-loader
 
 A Handlebars template loader for Webpack
 
+### Changelog
+
+<br>
+ * 1.0: Loader now works with Webpack 4. Still a beta release.
+
 <br/>
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 
