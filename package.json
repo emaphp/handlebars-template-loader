@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "fastparse": "^1.1.1",
-    "loader-utils": "^0.2.15"
+    "loader-utils": "^2.0.4"
   },
   "keywords": [
     "handlebars",
