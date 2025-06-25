@@ -1,11 +1,16 @@
-module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+module.exports = (Handlebars['default'] || Handlebars).template({"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.hooks.helperMissing, alias3="function", alias4=container.escapeExpression, lookupProperty = container.lookupProperty || function(parent, propertyName) {
+        if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {
+          return parent[propertyName];
+        }
+        return undefined
+    };
 
   return "<img src=\"images/"
-    + alias4(((helper = (helper = helpers.imgFile || (depth0 != null ? depth0.imgFile : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"imgFile","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"imgFile") || (depth0 != null ? lookupProperty(depth0,"imgFile") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"imgFile","hash":{},"data":data,"loc":{"start":{"line":1,"column":17},"end":{"line":1,"column":28}}}) : helper)))
     + "\" alt=\""
-    + alias4(((helper = (helper = helpers.imgDescription || (depth0 != null ? depth0.imgDescription : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"imgDescription","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"imgDescription") || (depth0 != null ? lookupProperty(depth0,"imgDescription") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"imgDescription","hash":{},"data":data,"loc":{"start":{"line":1,"column":35},"end":{"line":1,"column":53}}}) : helper)))
     + "\">\n<img src=\"/images/"
-    + alias4(((helper = (helper = helpers.imgFile || (depth0 != null ? depth0.imgFile : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"imgFile","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = lookupProperty(helpers,"imgFile") || (depth0 != null ? lookupProperty(depth0,"imgFile") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"imgFile","hash":{},"data":data,"loc":{"start":{"line":2,"column":18},"end":{"line":2,"column":29}}}) : helper)))
     + "\">";
 },"useData":true});

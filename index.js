@@ -31,7 +31,7 @@ module.exports = function(content) {
       runtimePath = require.resolve('handlebars/runtime').replace(/\\/g, '/');
 
   // Parse arguments
-  var query = this.query instanceof Object ? this.query : loaderUtils.parseQuery(this.query);
+  var query = this.query instanceof Object ? this.query : loaderUtils.parseQuery(this.query || '?');
 
   if (typeof(query) === 'object') {
     if (query.attributes !== undefined) {
